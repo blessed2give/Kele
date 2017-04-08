@@ -1,9 +1,9 @@
 require 'httparty'
 require 'json'
-require 'kele/roadmap'
+#require 'kele/roadmap'
 
 class Kele
-  include 'kele'
+#  include 'kele'
   include HTTParty
   BASE_URI = 'https://www.bloc.io/api/v1'
 
@@ -36,5 +36,21 @@ class Kele
   def get_checkpoint( checkpoint_id )
     options = { headers: { "authorization" => @auth_token } }
     response = self.class.get( BASE_URI + '/checkpoints/' + checkpoint_id.to_s, options )
+  end
+
+  def get_messages(page)
+    options = {
+      headers: { "authorization" => @auth_token },
+      body: { page: page }
+    }
+    response = self.class.get( BASE_URI + '/message_threads', options)
+  end
+
+  def create_message( mentor_id, message )
+    options = {
+      headers: { "authorization" => @auth_token },
+      body: {sender: @email, recipient_id: mentor_id.to_s, stripped_text: message }
+    }
+    response = self.class.post( BASE_URI + '/messages', options )
   end
 end
