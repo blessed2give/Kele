@@ -24,8 +24,11 @@ class Kele
   end
 
   def get_mentor_availability( mentor_id )
-    options = { headers: { "authorization" => @auth_token } }
-    response = self.class.get( BASE_URI + '/mentors/' + mentor_id.to_s + '/student_availability', options )
+    options = {
+      headers: { "authorization" => @auth_token },
+      body: { id: mentor_id }
+   }
+    response = self.class.get( BASE_URI + '/mentors/' + mentor_id + '/student_availability', options )
   end
 
   def get_roadmap( roadmap_id )
@@ -49,8 +52,16 @@ class Kele
   def create_message( mentor_id, message )
     options = {
       headers: { "authorization" => @auth_token },
-      body: {sender: @email, recipient_id: mentor_id.to_s, stripped_text: message }
+      body: { sender: @email, recipient_id: mentor_id.to_s, stripped_text: message }
     }
     response = self.class.post( BASE_URI + '/messages', options )
+  end
+
+  def create_submission( checkpoint_id, assignment_branch, assignment_commit_link, comment, enrollment_id )
+    options = {
+      headers: { "authorization" => @auth_token },
+      body: { checkpoint_id: checkpoint_id.to_s, assignment_branch: assignment_branch, assignment_commit_link: assignment_commit_link, comment: comment, enrollment_id: enrollment_id.to_s }
+    }
+    response = self.class.post( BASE_URI + '/checkpoint_submissions', options )
   end
 end
